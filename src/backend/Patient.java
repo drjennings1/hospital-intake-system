@@ -1,15 +1,10 @@
 /**
  * 
  */
-
-/**
- * 
- */
 package backend;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 
 public class Patient implements Comparable<Patient> {
     private String id;
@@ -49,6 +44,10 @@ public class Patient implements Comparable<Patient> {
     public void setSeverity(int newSeverity) {
     	this.severity = newSeverity;
     }
+    public String getSeverityString() { // necessary to properly display severity
+    	String severityString = Integer.toString(severity);
+    	return severityString;
+	}
     
     
     public String getVisitDescription() {
@@ -63,18 +62,18 @@ public class Patient implements Comparable<Patient> {
     	return checkInTime;
 	}
     
-    public String formattedPatient() {
+    public String formattedPatient() { // changing the format of the date/time to display more cleanly.
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     	String formattedTime = checkInTime.format(formatter);
     	return name + " (Severity: " + severity + ", Check-in: " + formattedTime + ", Description: " + visitDescription + ")";
     }
 
     @Override
-    public int compareTo(Patient other) { // for the merge sort, automatically found because of the "implements Comparable<Patient>"
-        if (this.severity != other.severity){
-            return Integer.compare(this.severity, other.severity);
+    public int compareTo(Patient other) { // for the priorityQueue to prioritize and for the display to output in the right order
+        if (this.severity != other.severity){ // If severity is unequal, return the higher priority severity (the lowest number)
+            return Integer.compare(this.severity, other.severity); // lower Integer severity = more severe, higher priority
         }
-        return this.checkInTime.compareTo(other.checkInTime);
+        return this.checkInTime.compareTo(other.checkInTime); // if severity is equal, return the higher priority check-in time (the earliest)
     }
 
     @Override
